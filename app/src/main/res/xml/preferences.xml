@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ListPreference
+        android:key="region_host"
+        android:title="@string/region_host"
+        android:summary="@string/summary_region_pref"
+        android:dialogTitle="Select a region"
+        android:entries="@array/region_host_list"
+        android:entryValues="@array/region_host_list_values"
+        android:defaultValue="eu.battle.net" />
+
+</PreferenceScreen>

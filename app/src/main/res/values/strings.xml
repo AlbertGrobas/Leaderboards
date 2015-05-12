@@ -1,0 +1,26 @@
+<resources>
+    <string name="app_name">Blizzard Leaderboards</string>
+    <string name="action_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_character">Character Activity</string>
+    <string name="sort_by_position">Sort by Position</string>
+    <string name="sort_by_name">Sort by Name</string>
+    <string name="sort_by_realm">Sort by Realm</string>
+    <string name="sort_by_rating">Sort by Rating</string>
+    <string name="sort_by_season_wins">Sort by Season Wins</string>
+    <string name="open">Open</string>
+    <string name="close">Close</string>
+    <string name="arena2v2">Arena 2v2</string>
+    <string name="arena3v3">Arena 3v3</string>
+    <string name="arena5v5">Arena 5v5</string>
+    <string name="ratedbg">Rated Battlegrounds</string>
+    <string name="settings">Settings</string>
+    <string name="license">License</string>
+    <string name="search_hint">Search name or realm</string>
+    <string name="search">Search</string>
+    <string name="clear_cache">Clear Cache</string>
+    <string name="region_host">Region Host</string>
+    <string name="summary_region_pref">Current region is %s</string>
+    <string name="error_layout">Ops! Error retrieving data, swipe down to try again.</string>
+
+</resources>

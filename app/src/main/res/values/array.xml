@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="region_host_list">
+        <item>Europe</item>
+        <item>United States</item>
+        <item>Korea</item>
+        <item>Taiwan</item>
+        <item>China</item>
+    </string-array>
+
+    <string-array name="region_host_list_values">
+        <item>eu.battle.net</item>
+        <item>us.battle.net</item>
+        <item>kr.battle.net</item>
+        <item>tw.battle.net</item>
+        <item>www.battlenet.com.cn</item>
+    </string-array>
+</resources>

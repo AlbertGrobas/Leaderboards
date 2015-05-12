@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- theme colors -->
+    <color name="primary">#2196F3</color>
+    <color name="primaryDark">#1976D2</color>
+    <color name="accent">#FF4081</color>
+    <color name="colorControlHighlight">#fff</color>
+
+    <color name="row_background">#2B1507</color>
+    <color name="row_background_odd">#231207</color>
+    <color name="drawer_background">#ffffff</color>
+    <color name="drawer_text_color">#000000</color>
+    <color name="drawer_divider">#c3c3c3</color>
+    <color name="drawer_logo_background">#231207</color>
+    <color name="drawer_item_selected">#eeeeee</color>
+    <color name="drawer_item_text_selected">#ffb100</color>
+    <color name="swipe_refresh_color">#ffb100</color>
+    <color name="error_title">#c3c3c3</color>
+
+    <!-- wow classes colors -->
+    <color name="deathknight">#C41F3B</color>
+    <color name="druid">#FF7D0A</color>
+    <color name="hunter">#ABD473</color>
+    <color name="mage">#69CCF0</color>
+    <color name="monk">#00FF96</color>
+    <color name="paladin">#F58CBA</color>
+    <color name="priest">#FFFFFF</color>
+    <color name="rogue">#FFF569</color>
+    <color name="shaman">#0070DE</color>
+    <color name="warlock">#9482C9</color>
+    <color name="warrior">#C79C6E</color>
+
+    <array name="class_colors">
+        <item>@color/warrior</item>
+        <item>@color/paladin</item>
+        <item>@color/hunter</item>
+        <item>@color/rogue</item>
+        <item>@color/priest</item>
+        <item>@color/deathknight</item>
+        <item>@color/shaman</item>
+        <item>@color/mage</item>
+        <item>@color/warlock</item>
+        <item>@color/monk</item>
+        <item>@color/druid</item>
+    </array>
+
+    <!-- other colors -->
+    <color name="wins">#2dd300</color>
+    <color name="losses">#db0000</color>
+    <color name="rating">#953203</color>
+    <color name="position">#ffd700</color>
+
+</resources>

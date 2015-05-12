@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+        android:id="@+id/drawer_opt1"
+        style="@style/DrawerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:drawableLeft="@drawable/ic_action_help"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:onClick="onOptionClick"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="Option 1" />
+
+    <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+        android:id="@+id/drawer_opt2"
+        style="@style/DrawerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:drawableLeft="@drawable/ic_action_help"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:onClick="onOptionClick"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="Option 2" />
+
+    <include layout="@layout/navdrawer_divider" />
+
+</LinearLayout>

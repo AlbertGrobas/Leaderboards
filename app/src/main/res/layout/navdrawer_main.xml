@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+        android:id="@+id/drawer_2v2"
+        style="@style/DrawerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:drawableLeft="@drawable/ic_action_filter_2"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:onClick="onBracketClick"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/arena2v2" />
+
+    <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+        android:id="@+id/drawer_3v3"
+        style="@style/DrawerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:drawableLeft="@drawable/ic_action_filter_3"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:onClick="onBracketClick"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/arena3v3" />
+
+    <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+        android:id="@+id/drawer_5v5"
+        style="@style/DrawerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:drawableLeft="@drawable/ic_action_filter_5"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:onClick="onBracketClick"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/arena5v5" />
+
+    <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+        android:id="@+id/drawer_rbg"
+        style="@style/DrawerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:drawableLeft="@drawable/ic_action_filter_9_plus"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:onClick="onBracketClick"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/ratedbg" />
+
+    <include layout="@layout/navdrawer_divider" />
+
+    <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+        android:id="@+id/drawer_settings"
+        style="@style/DrawerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:drawableLeft="@drawable/ic_action_settings"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:onClick="onSettingsClick"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/settings" />
+
+    <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+        android:id="@+id/drawer_license"
+        style="@style/DrawerTextView"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginTop="@dimen/activity_vertical_margin_half"
+        android:drawableLeft="@drawable/ic_action_help"
+        android:drawablePadding="@dimen/activity_horizontal_margin"
+        android:onClick="onLicenseClick"
+        android:paddingLeft="@dimen/activity_horizontal_margin"
+        android:text="@string/license" />
+
+</LinearLayout>
