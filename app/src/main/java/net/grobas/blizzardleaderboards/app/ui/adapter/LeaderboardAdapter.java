@@ -94,7 +94,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int i) {
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.row_pvp, viewGroup, false);
+        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.leaderboard_row, viewGroup, false);
         ViewHolder vHolder = new ViewHolder(v);
         v.setBackgroundResource((i == 0) ? R.drawable.item_background : R.drawable.item_background_odd);
         return vHolder;
@@ -174,13 +174,16 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
         @Override
         public boolean areContentsTheSame(Row oldItem, Row newItem) {
-            return (oldItem.getRanking() == newItem.getRanking() &&
-                oldItem.getRealmId() == newItem.getRealmId());
+            return oldItem.getRanking() == newItem.getRanking() &&
+                oldItem.getRating() == newItem.getRating() &&
+                oldItem.getSeasonWins() == newItem.getSeasonWins() &&
+                oldItem.getSeasonLosses() == newItem.getSeasonLosses();
         }
 
         @Override
         public boolean areItemsTheSame(Row item1, Row item2) {
-            return item1.getRanking() == item2.getRanking();
+            return item1.getRealmId() == item2.getRealmId() &&
+                    item1.getName().contentEquals(item2.getName());
         }
 
         @Override

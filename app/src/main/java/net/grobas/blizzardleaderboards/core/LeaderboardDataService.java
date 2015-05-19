@@ -65,7 +65,7 @@ public class LeaderboardDataService {
                     leaderboard.setBracket(bracket);
                     leaderboard.setHost(mHost);
                 }
-                return mDAO.writeLeaderboard(leaderboard);
+                return mDAO.writeLeaderboard(leaderboard, forceUpdate);
             }
         }).map(new Func1<RealmLeaderboard, Leaderboard>() {
             @Override

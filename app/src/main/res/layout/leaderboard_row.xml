@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    app:cardCornerRadius="5dp">
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/activity_vertical_margin"
+        android:paddingRight="@dimen/activity_vertical_margin"
+        android:paddingTop="@dimen/activity_vertical_margin">
+
+        <TextView
+            android:id="@+id/row_pvp_rank"
+            android:layout_width="50dp"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/row_pvp_realm"
+            android:layout_alignTop="@+id/row_pvp_name"
+            android:gravity="center"
+            android:textColor="@color/position"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/row_pvp_name"
+            style="?android:textAppearanceListItem"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/row_pvp_rank"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:id="@+id/row_pvp_faction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/row_pvp_name"
+            android:layout_marginLeft="10dp"
+            android:layout_toRightOf="@id/row_pvp_name" />
+
+        <ImageView
+            android:id="@+id/row_pvp_race"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/row_pvp_name"
+            android:layout_toRightOf="@id/row_pvp_faction" />
+
+        <ImageView
+            android:id="@+id/row_pvp_class"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/row_pvp_name"
+            android:layout_toRightOf="@id/row_pvp_race" />
+
+        <TextView
+            android:id="@+id/row_pvp_realm"
+            style="?android:textAppearanceListItemSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@id/row_pvp_name"
+            android:layout_below="@id/row_pvp_name"
+            android:textStyle="italic" />
+
+        <TextView
+            android:id="@+id/row_pvp_rating"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/rating"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/row_pvp_season"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/row_pvp_rating"
+            android:textStyle="bold" />
+
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>
+
+

@@ -28,6 +28,7 @@ import net.grobas.blizzardleaderboards.app.ui.custom.DividerItemDecoration;
 import net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView;
 import net.grobas.blizzardleaderboards.app.util.Constants;
 import net.grobas.blizzardleaderboards.core.LeaderboardDataService;
+import net.grobas.blizzardleaderboards.core.database.model.RealmLeaderboard;
 
 import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
@@ -86,6 +87,12 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(1));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        Realm r = Realm.getInstance(this);
+        int c = r.where(RealmLeaderboard.class).findAll().size();
+        Log.e("count", "number-" + c);
+        r.close();
+
     }
 
     @Override
