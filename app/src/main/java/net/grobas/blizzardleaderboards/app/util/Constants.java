@@ -20,7 +20,7 @@ public class Constants {
     public static final String BRACKET_5v5 = "5v5";
     public static final String BRACKET_rbg = "rbg";
 
-    public static final int SORT_BY_RAKING = 0;
+    public static final int SORT_BY_RANKING = 0;
     public static final int SORT_BY_NAME = 1;
     public static final int SORT_BY_RATING = 2;
     public static final int SORT_BY_REALM = 3;
@@ -33,10 +33,39 @@ public class Constants {
             BRACKET_rbg
     };
 
+    public static final int FACTION_ALLIANCE = 0;
+    public static final int FACTION_HORDE = 1;
+
+    public static final int CLASS_WARRIOR = 1;
+    public static final int CLASS_PALADIN = 2;
+    public static final int CLASS_HUNTER = 3;
+    public static final int CLASS_ROGUE = 4;
+    public static final int CLASS_PRIEST = 5;
+    public static final int CLASS_DEATHKNIGHT = 6;
+    public static final int CLASS_SHAMAN = 7;
+    public static final int CLASS_MAGE = 8;
+    public static final int CLASS_WARLOCK = 9;
+    public static final int CLASS_MONK = 10;
+    public static final int CLASS_DRUID = 11;
+
+    public static final int RACE_HUMAN = 1;
+    public static final int RACE_ORC = 2;
+    public static final int RACE_DWARF = 3;
+    public static final int RACE_NIGHT_ELF = 4;
+    public static final int RACE_SCOURGE = 5;
+    public static final int RACE_TAUREN = 6;
+    public static final int RACE_GNOME = 7;
+    public static final int RACE_TROLL = 8;
+    public static final int RACE_GOBLIN = 9;
+    public static final int RACE_BLOOD_ELF = 10;
+    public static final int RACE_DRAENEI = 11;
+    public static final int RACE_WORGEN = 12;
+    public static final int RACE_PANDAREN = 13;
+
     public static final int[] MALE_RACES = {
         R.drawable.ic_race_human_male,
         R.drawable.ic_race_orc_male,
-        R.drawable.ic_race_draenei_male,
+        R.drawable.ic_race_dwarf_male,
         R.drawable.ic_race_nightelf_male,
         R.drawable.ic_race_scourge_male,
         R.drawable.ic_race_tauren_male,
@@ -51,7 +80,7 @@ public class Constants {
     public static final int[] FEMALE_RACES = {
         R.drawable.ic_race_human_female,
         R.drawable.ic_race_orc_female,
-        R.drawable.ic_race_draenei_female,
+        R.drawable.ic_race_dwarf_female,
         R.drawable.ic_race_nightelf_female,
         R.drawable.ic_race_scourge_female,
         R.drawable.ic_race_tauren_female,

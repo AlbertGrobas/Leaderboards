@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="220dp"
+    android:layout_height="match_parent"
+    android:layout_gravity="end"
+    android:background="@color/drawer_background"
+    android:theme="@style/AppTheme.Base.Light">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/order_label"
+            style="?android:attr/textAppearanceLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin_half"
+            android:text="@string/order"
+            android:textStyle="bold" />
+
+        <include layout="@layout/navdrawer_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/activity_vertical_margin_half"
+            android:orientation="vertical">
+
+            <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+                android:id="@+id/order_name"
+                style="@style/DrawerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin_double"
+                android:text="@string/name" />
+
+            <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+                android:id="@+id/order_ranking"
+                style="@style/DrawerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin_double"
+                android:text="@string/ranking" />
+
+            <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+                android:id="@+id/order_rating"
+                style="@style/DrawerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin_double"
+                android:text="@string/rating" />
+
+            <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+                android:id="@+id/order_realm"
+                style="@style/DrawerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:paddingLeft="@dimen/activity_horizontal_margin_double"
+                android:text="@string/realm" />
+
+            <net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView
+                android:id="@+id/order_season_wins"
+                style="@style/DrawerTextView"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:drawablePadding="@dimen/activity_horizontal_margin"
+                android:paddingLeft="@dimen/activity_horizontal_margin_double"
+                android:text="@string/season_wins" />
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <TextView
+                style="?android:attr/textAppearanceLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:text="@string/filter"
+                android:textStyle="bold"
+                android:id="@+id/textView" />
+
+            <ImageButton
+                android:id="@+id/filter_select_all"
+                android:layout_width="wrap_content"
+                android:src="@drawable/ic_action_done_all"
+                android:layout_marginRight="@dimen/activity_vertical_margin_half"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+
+
+        <include layout="@layout/navdrawer_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <CheckBox
+                android:id="@+id/filter_alliance"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/alliance"/>
+
+            <CheckBox
+                android:id="@+id/filter_horde"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/horde" />
+        </LinearLayout>
+
+        <include layout="@layout/navdrawer_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <CheckBox
+                android:id="@+id/filter_dk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/death_kinght" />
+
+            <CheckBox
+                android:id="@+id/filter_druid"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/druid" />
+
+            <CheckBox
+                android:id="@+id/filter_hunter"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/hunter" />
+
+            <CheckBox
+                android:id="@+id/filter_mage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/mage" />
+
+            <CheckBox
+                android:id="@+id/filter_monk"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/monk" />
+
+            <CheckBox
+                android:id="@+id/filter_paladin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/paladin" />
+
+            <CheckBox
+                android:id="@+id/filter_priest"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/priest" />
+
+            <CheckBox
+                android:id="@+id/filter_rogue"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/rogue" />
+
+            <CheckBox
+                android:id="@+id/filter_shaman"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/shaman" />
+
+            <CheckBox
+                android:id="@+id/filter_warlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/warlock" />
+
+            <CheckBox
+                android:id="@+id/filter_warrior"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/warrior" />
+        </LinearLayout>
+
+        <include layout="@layout/navdrawer_divider" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/activity_vertical_margin"
+            android:paddingTop="@dimen/activity_vertical_margin">
+
+            <CheckBox
+                android:id="@+id/filter_blood_elf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/blood_elf" />
+
+            <CheckBox
+                android:id="@+id/filter_draenei"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/draenei" />
+
+            <CheckBox
+                android:id="@+id/filter_dwarf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/dwarf" />
+
+            <CheckBox
+                android:id="@+id/filter_gnome"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/gnome" />
+
+            <CheckBox
+                android:id="@+id/filter_goblin"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/goblin" />
+
+            <CheckBox
+                android:id="@+id/filter_human"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/human" />
+
+            <CheckBox
+                android:id="@+id/filter_night_elf"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/night_elf"/>
+
+            <CheckBox
+                android:id="@+id/filter_orc"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/orc" />
+
+            <CheckBox
+                android:id="@+id/filter_pandaren"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/pandaren" />
+
+            <CheckBox
+                android:id="@+id/filter_tauren"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/tauren"/>
+
+            <CheckBox
+                android:id="@+id/filter_troll"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/troll" />
+
+            <CheckBox
+                android:id="@+id/filter_undead"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/undead" />
+
+            <CheckBox
+                android:id="@+id/filter_worgen"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/activity_vertical_margin_half"
+                android:checked="true"
+                android:text="@string/worgen" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+
+</ScrollView>

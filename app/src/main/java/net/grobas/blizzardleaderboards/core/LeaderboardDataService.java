@@ -100,7 +100,14 @@ public class LeaderboardDataService {
         row.setFactionId(realmRow.getFactionId());
         row.setGenderId(realmRow.getGenderId());
         row.setName(realmRow.getName());
-        row.setRaceId(realmRow.getRaceId());
+        //Well blizzard, let's fix this...
+        int raceId = realmRow.getRaceId();
+        if (raceId == 26 || raceId == 25 || raceId == 24) //pandaren
+            raceId = 13;
+        if (raceId == 22) //worgen
+            raceId = 12;
+
+        row.setRaceId(raceId);
         row.setRanking(realmRow.getRanking());
         row.setRating(realmRow.getRating());
         row.setRealmName(realmRow.getRealmName());

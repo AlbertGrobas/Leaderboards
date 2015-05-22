@@ -11,10 +11,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.text.TextUtils;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
@@ -23,43 +24,63 @@ import com.squareup.otto.Subscribe;
 import net.grobas.blizzardleaderboards.R;
 import net.grobas.blizzardleaderboards.app.domain.Leaderboard;
 import net.grobas.blizzardleaderboards.app.domain.Row;
+import net.grobas.blizzardleaderboards.app.ui.adapter.FilterSpec;
 import net.grobas.blizzardleaderboards.app.ui.adapter.LeaderboardAdapter;
 import net.grobas.blizzardleaderboards.app.ui.custom.DividerItemDecoration;
 import net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView;
 import net.grobas.blizzardleaderboards.app.util.Constants;
 import net.grobas.blizzardleaderboards.core.LeaderboardDataService;
-import net.grobas.blizzardleaderboards.core.database.model.RealmLeaderboard;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
-import io.realm.Realm;
+import butterknife.InjectViews;
+import butterknife.OnClick;
 import rx.Observer;
 import rx.Subscription;
 import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener,
         MenuItemCompat.OnActionExpandListener, Observer<Leaderboard> {
 
     private final static String SAVE_BRACKET_STATE = "bracket_state";
+    private final static String SAVE_ORDER_STATE = "order_state";
     private final static String SAVE_FIRST_VIEW_STATE = "first_view_state";
-    private final static String SAVE_SELECTED_ID = "selected_id";
+    private final static String SAVE_BRACKET_SELECTED_ID = "bracket_id";
+    private final static String SAVE_ORDER_SELECTED_ID = "order_id";
+    private final static String SAVE_FILTER_SPEC = "filter_spec";
 
     @InjectView(R.id.widget_listView) RecyclerView mRecyclerView;
     @InjectView(R.id.loading_layer) FrameLayout loadingLayout;
     @InjectView(R.id.error_layer) FrameLayout errorLayout;
 
-    private DrawerTextView currentSelected;
-    private int selectedId = R.id.drawer_2v2;
+    @InjectViews({R.id.filter_alliance, R.id.filter_horde, R.id.filter_dk, R.id.filter_druid,
+            R.id.filter_hunter, R.id.filter_mage, R.id.filter_monk, R.id.filter_paladin,
+            R.id.filter_priest, R.id.filter_rogue, R.id.filter_shaman, R.id.filter_warlock,
+            R.id.filter_warrior, R.id.filter_blood_elf, R.id.filter_draenei, R.id.filter_dwarf,
+            R.id.filter_gnome, R.id.filter_goblin, R.id.filter_human, R.id.filter_orc,
+            R.id.filter_pandaren, R.id.filter_tauren, R.id.filter_troll, R.id.filter_worgen,
+            R.id.filter_night_elf, R.id.filter_undead}) List<CheckBox> filterList;
+
+    private DrawerTextView currentBracketSelected;
+    private int selectedBracketId = R.id.drawer_2v2;
+    private int currentBracket = 0;
+
+    private DrawerTextView currentOrderSelected;
+    private int selectedOrderId = R.id.order_ranking;
+    private int currentOrder = 0;
+
     private MenuItem mSearchMenuItem;
     private LeaderboardAdapter mAdapter;
     private LinearLayoutManager mLayoutManager;
+    private FilterSpec filterSpec;
 
-    private int currentBracket = 0;
     private int firstViewVisible = 0;
     private String lastQuery;
     private long lastSearchTime = 0L;
@@ -74,8 +95,10 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         if(savedInstanceState != null) {
             currentBracket = savedInstanceState.getInt(SAVE_BRACKET_STATE, 0);
+            currentOrder = savedInstanceState.getInt(SAVE_ORDER_STATE, 0);
             firstViewVisible = savedInstanceState.getInt(SAVE_FIRST_VIEW_STATE, 0);
-            selectedId = savedInstanceState.getInt(SAVE_SELECTED_ID, R.id.drawer_2v2);
+            selectedBracketId = savedInstanceState.getInt(SAVE_BRACKET_SELECTED_ID, R.id.drawer_2v2);
+            selectedOrderId = savedInstanceState.getInt(SAVE_ORDER_SELECTED_ID, R.id.order_ranking);
         }
     }
 
@@ -87,12 +110,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         mRecyclerView.setHasFixedSize(true);
         mRecyclerView.addItemDecoration(new DividerItemDecoration(1));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        Realm r = Realm.getInstance(this);
-        int c = r.where(RealmLeaderboard.class).findAll().size();
-        Log.e("count", "number-" + c);
-        r.close();
-
     }
 
     @Override
@@ -127,8 +144,11 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     public void onSaveInstanceState(Bundle outState) {
         outState.putInt(SAVE_BRACKET_STATE, currentBracket);
+        outState.putInt(SAVE_ORDER_STATE, currentOrder);
         outState.putInt(SAVE_FIRST_VIEW_STATE, mLayoutManager.findFirstVisibleItemPosition());
-        outState.putInt(SAVE_SELECTED_ID, selectedId);
+        outState.putInt(SAVE_BRACKET_SELECTED_ID, selectedBracketId);
+        outState.putInt(SAVE_ORDER_SELECTED_ID, selectedOrderId);
+        outState.putParcelable(SAVE_FILTER_SPEC, mAdapter.getFilterSpec());
         super.onSaveInstanceState(outState);
     }
 
@@ -136,8 +156,11 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         currentBracket = savedInstanceState.getInt(SAVE_BRACKET_STATE, 0);
+        currentOrder = savedInstanceState.getInt(SAVE_ORDER_STATE, 0);
         firstViewVisible = savedInstanceState.getInt(SAVE_FIRST_VIEW_STATE, 0);
-        selectedId = savedInstanceState.getInt(SAVE_SELECTED_ID, R.id.drawer_2v2);
+        selectedBracketId = savedInstanceState.getInt(SAVE_BRACKET_SELECTED_ID, R.id.drawer_2v2);
+        selectedOrderId = savedInstanceState.getInt(SAVE_ORDER_SELECTED_ID, R.id.order_ranking);
+        filterSpec = savedInstanceState.getParcelable(SAVE_FILTER_SPEC);
     }
 
     @Override
@@ -151,11 +174,13 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @Override
-    public void onCompleted() { }
+    public void onCompleted() {
+        //TODO
+    }
 
     @Override
     public void onError(Throwable e) {
-        Log.e("Leaderboard", "Error retrieving data", e);
+        Timber.e(e, "Error on data service");
         stopLoading();
         errorLayout.setVisibility(View.VISIBLE);
     }
@@ -164,7 +189,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     public void onNext(Leaderboard leaderboard) {
         stopLoading();
         if(mAdapter == null) {
-            mAdapter = new LeaderboardAdapter(MainActivity.this, leaderboard);
+            mAdapter = new LeaderboardAdapter(MainActivity.this, leaderboard, filterSpec, currentOrder);
             mRecyclerView.setAdapter(mAdapter);
         } else {
             mAdapter.update(leaderboard.getRows());
@@ -190,13 +215,14 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         firstViewVisible = 0;
         if(mSearchMenuItem.isActionViewExpanded())
             mSearchMenuItem.collapseActionView();
+        if(errorLayout.isShown())
+            startLoading();
         setDataFromService(true);
     }
 
     private void setDataFromService(boolean forceUpdate) {
         leaderboardSubscription = AppObservable.bindActivity(this,
-                LeaderboardDataService.getInstance().getLeaderboard(Constants.BRACKET_LIST[currentBracket], forceUpdate))
-                .cache()
+            LeaderboardDataService.getInstance().getLeaderboard(Constants.BRACKET_LIST[currentBracket], forceUpdate))
                 .delay(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
@@ -254,26 +280,30 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         LinearLayout parent = (LinearLayout) findViewById(R.id.drawer_contents);
         parent.addView(getLayoutInflater().inflate(R.layout.navdrawer_main, parent, false));
 
-        currentSelected = ButterKnife.findById(parent, selectedId);
-        currentSelected.setBackgroundResource(R.drawable.drawer_item_selected_background);
-        currentSelected.setTextColor(getResources().getColor(R.color.drawer_item_text_selected));
+        currentBracketSelected = ButterKnife.findById(parent, selectedBracketId);
+        currentBracketSelected.setBackgroundResource(R.drawable.drawer_item_selected_background);
+        currentBracketSelected.setTextColor(getResources().getColor(R.color.drawer_item_text_selected));
+
+        currentOrderSelected = ButterKnife.findById(this, selectedOrderId);
+        currentOrderSelected.setBackgroundResource(R.drawable.drawer_item_selected_background);
+        currentOrderSelected.setTextColor(getResources().getColor(R.color.drawer_item_text_selected));
     }
 
-    public void onSettingsClick(View v) {
+    public void onClickSettings(View v) {
         startActivity(new Intent(this, SettingsActivity.class));
     }
 
-    public void onLicenseClick(View v) {
+    public void onClickLicense(View v) {
         //TODO
     }
 
-    public void onBracketClick(View v) {
+    public void onClickBracket(View v) {
         DrawerTextView textView = (DrawerTextView) v;
-        if(textView.getId() == currentSelected.getId())
+        if(textView.getId() == currentBracketSelected.getId())
             return;
 
-        currentSelected.setBackgroundResource(R.drawable.drawer_item_background);
-        currentSelected.setTextColor(getResources().getColor(R.color.drawer_text_color));
+        currentBracketSelected.setBackgroundResource(R.drawable.drawer_item_background);
+        currentBracketSelected.setTextColor(getResources().getColor(R.color.drawer_text_color));
         textView.setBackgroundResource(R.drawable.drawer_item_selected_background);
         textView.setTextColor(getResources().getColor(R.color.drawer_item_text_selected));
 
@@ -295,33 +325,20 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
                 setToolbarTitle(R.string.ratedbg);
                 break;
         }
-        currentSelected = textView;
-        selectedId = v.getId();
+        currentBracketSelected = textView;
+        selectedBracketId = v.getId();
         firstViewVisible = 0;
-        changeBracket();
+
+        startLoading();
+        setDataFromService(false);
+        closeNavDrawer();
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.action_clear_cache:
-                Realm.deleteRealmFile(this);
-                break;
-            case R.id.action_sortbyname:
-                sortListBy(Constants.SORT_BY_NAME);
-                break;
-            case R.id.action_sortbyrating:
-                sortListBy(Constants.SORT_BY_RATING);
-                break;
-            case R.id.action_sortbyserver:
-                sortListBy(Constants.SORT_BY_REALM);
-                break;
-            case R.id.action_sortbypos:
-                sortListBy(Constants.SORT_BY_RAKING);
-                break;
-            case R.id.action_sortbywins:
-                sortListBy(Constants.SORT_BY_SEASON_WINS);
+        switch (item.getItemId()) {
+            case R.id.action_show_drawer:
+                openDrawer(Gravity.END);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -330,13 +347,146 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         return true;
     }
 
-    private void sortListBy(int sort) {
-        mAdapter.setSortBy(sort);
+    @OnClick({R.id.order_name, R.id.order_rating, R.id.order_realm, R.id.order_ranking, R.id.order_season_wins})
+    public void onClickOrder(DrawerTextView v) {
+        int id = v.getId();
+
+        if(currentOrderSelected.getId() != id) {
+            currentOrderSelected.setBackgroundResource(R.drawable.drawer_item_background);
+            currentOrderSelected.setTextColor(getResources().getColor(R.color.drawer_text_color));
+            v.setBackgroundResource(R.drawable.drawer_item_selected_background);
+            v.setTextColor(getResources().getColor(R.color.drawer_item_text_selected));
+            currentOrderSelected = v;
+            selectedOrderId = id;
+        }
+
+        switch (id) {
+            case R.id.order_name:
+                currentOrder = Constants.SORT_BY_NAME;
+                break;
+            case R.id.order_rating:
+                currentOrder = Constants.SORT_BY_RATING;
+                break;
+            case R.id.order_realm:
+                currentOrder = Constants.SORT_BY_REALM;
+                break;
+            case R.id.order_ranking:
+                currentOrder = Constants.SORT_BY_RANKING;
+                break;
+            case R.id.order_season_wins:
+                currentOrder = Constants.SORT_BY_SEASON_WINS;
+        }
+
+        mAdapter.setSortBy(currentOrder);
+        closeNavDrawer();
     }
 
-    private void changeBracket() {
-        startLoading();
-        setDataFromService(false);
+    @OnClick({R.id.filter_alliance, R.id.filter_horde})
+    public void onClickFactionFilter(View v) {
+        switch (v.getId()) {
+            case R.id.filter_alliance:
+                mAdapter.filterFaction(Constants.FACTION_ALLIANCE);
+                break;
+            case R.id.filter_horde:
+                mAdapter.filterFaction(Constants.FACTION_HORDE);
+        }
+    }
+
+    @OnClick({R.id.filter_dk, R.id.filter_druid, R.id.filter_hunter, R.id.filter_mage, R.id.filter_monk,
+        R.id.filter_paladin, R.id.filter_priest, R.id.filter_rogue, R.id.filter_shaman, R.id.filter_warlock,
+        R.id.filter_warrior})
+    public void onClickClassFilter(View v) {
+        switch (v.getId()) {
+            case R.id.filter_warrior:
+                mAdapter.filterClass(Constants.CLASS_WARRIOR);
+                break;
+            case R.id.filter_paladin:
+                mAdapter.filterClass(Constants.CLASS_PALADIN);
+                break;
+            case R.id.filter_hunter:
+                mAdapter.filterClass(Constants.CLASS_HUNTER);
+                break;
+            case R.id.filter_rogue:
+                mAdapter.filterClass(Constants.CLASS_ROGUE);
+                break;
+            case R.id.filter_priest:
+                mAdapter.filterClass(Constants.CLASS_PRIEST);
+                break;
+            case R.id.filter_dk:
+                mAdapter.filterClass(Constants.CLASS_DEATHKNIGHT);
+                break;
+            case R.id.filter_shaman:
+                mAdapter.filterClass(Constants.CLASS_SHAMAN);
+                break;
+            case R.id.filter_mage:
+                mAdapter.filterClass(Constants.CLASS_MAGE);
+                break;
+            case R.id.filter_warlock:
+                mAdapter.filterClass(Constants.CLASS_WARLOCK);
+                break;
+            case R.id.filter_monk:
+                mAdapter.filterClass(Constants.CLASS_MONK);
+                break;
+            case R.id.filter_druid:
+                mAdapter.filterClass(Constants.CLASS_DRUID);
+        }
+
+    }
+
+    @OnClick({R.id.filter_blood_elf, R.id.filter_draenei, R.id.filter_dwarf, R.id.filter_gnome, R.id.filter_goblin,
+        R.id.filter_human, R.id.filter_orc, R.id.filter_pandaren, R.id.filter_tauren, R.id.filter_troll,
+            R.id.filter_worgen, R.id.filter_night_elf, R.id.filter_undead})
+    public void onClickRaceFilter(View v) {
+        switch (v.getId()) {
+            case R.id.filter_human:
+                mAdapter.filterRace(Constants.RACE_HUMAN);
+                break;
+            case R.id.filter_orc:
+                mAdapter.filterRace(Constants.RACE_ORC);
+                break;
+            case R.id.filter_dwarf:
+                mAdapter.filterRace(Constants.RACE_DWARF);
+                break;
+            case R.id.filter_night_elf:
+                mAdapter.filterRace(Constants.RACE_NIGHT_ELF);
+                break;
+            case R.id.filter_undead:
+                mAdapter.filterRace(Constants.RACE_SCOURGE);
+                break;
+            case R.id.filter_tauren:
+                mAdapter.filterRace(Constants.RACE_TAUREN);
+                break;
+            case R.id.filter_gnome:
+                mAdapter.filterRace(Constants.RACE_GNOME);
+                break;
+            case R.id.filter_troll:
+                mAdapter.filterRace(Constants.RACE_TROLL);
+                break;
+            case R.id.filter_goblin:
+                mAdapter.filterRace(Constants.RACE_GOBLIN);
+                break;
+            case R.id.filter_blood_elf:
+                mAdapter.filterRace(Constants.RACE_BLOOD_ELF);
+                break;
+            case R.id.filter_draenei:
+                mAdapter.filterRace(Constants.RACE_DRAENEI);
+                break;
+            case R.id.filter_worgen:
+                mAdapter.filterRace(Constants.RACE_WORGEN);
+                break;
+            case R.id.filter_pandaren:
+                mAdapter.filterRace(Constants.RACE_PANDAREN);
+        }
+
+    }
+
+    @OnClick(R.id.filter_select_all)
+    public void onClickSelectAll(View v) {
+        mAdapter.clearFilter();
+
+        for(CheckBox cb : filterList) {
+            cb.setChecked(true);
+        }
         closeNavDrawer();
     }
 

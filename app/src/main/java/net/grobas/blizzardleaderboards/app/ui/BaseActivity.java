@@ -57,13 +57,20 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected boolean isNavDrawerOpen() {
-        return mDrawerLayout != null && mDrawerLayout.isDrawerOpen(Gravity.START);
+        return mDrawerLayout != null &&
+                (mDrawerLayout.isDrawerOpen(Gravity.START) || mDrawerLayout.isDrawerOpen(Gravity.END));
     }
 
     protected void closeNavDrawer() {
         if (mDrawerLayout != null) {
             mDrawerLayout.closeDrawer(Gravity.START);
+            mDrawerLayout.closeDrawer(Gravity.END);
         }
+    }
+
+    protected void openDrawer(int gravity) {
+        if(mDrawerLayout != null)
+            mDrawerLayout.openDrawer(gravity);
     }
 
     private void setUpDrawerLayout() {

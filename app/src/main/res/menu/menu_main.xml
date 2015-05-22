@@ -1,40 +1,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_clear_cache"
-        android:orderInCategory="100"
-        android:title="@string/clear_cache"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_sortbypos"
-        android:orderInCategory="100"
-        android:title="@string/sort_by_position"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_sortbyname"
-        android:orderInCategory="100"
-        android:title="@string/sort_by_name"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_sortbyserver"
-        android:orderInCategory="100"
-        android:title="@string/sort_by_realm"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_sortbyrating"
-        android:orderInCategory="100"
-        android:title="@string/sort_by_rating"
-        app:showAsAction="never" />
-    <item
-        android:id="@+id/action_sortbywins"
-        android:orderInCategory="100"
-        android:title="@string/sort_by_season_wins"
-        app:showAsAction="never" />
+
     <item
         android:id="@+id/action_search"
         android:icon="@drawable/abc_ic_search_api_mtrl_alpha"
         android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always|collapseActionView" />
+
+    <item
+        android:id="@+id/action_show_drawer"
+        android:icon="@drawable/ic_action_filter_list"
+        android:title="@string/order_filter"
+        app:showAsAction="always" />
 
 </menu>

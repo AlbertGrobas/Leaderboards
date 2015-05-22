@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,25 +37,34 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     private List<Row> searchData;
     private SortedList<Row> leaderboardData;
 
-    private int currentSortBy = Constants.SORT_BY_RAKING;
+    private int currentSortBy = Constants.SORT_BY_RANKING;
     private boolean isSortAscending = true;
     private SearchFilter mFilter;
+    private FilterSpec mFilterSpec;
 
-    public LeaderboardAdapter(Context context, Leaderboard leaderboard) {
+    public LeaderboardAdapter(Context context, Leaderboard leaderboard, FilterSpec filterSpec, int order) {
         this.context = context;
         this.mFilter = new SearchFilter();
         this.backupData = leaderboard.getRows();
         this.searchData = leaderboard.getRows();
         this.classColors = context.getResources().getIntArray(R.array.class_colors);
         this.leaderboardData = new SortedList<>(Row.class, new LeaderboardSortCallback(), leaderboard.getRows().size());
-        initData(backupData);
+        this.mFilterSpec = (filterSpec == null) ? new FilterSpec() : filterSpec;
+        this.currentSortBy = order;
+        getFilter().filter("");
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
         Row row = leaderboardData.get(i);
 
-        viewHolder.rank.setText(String.valueOf(row.getRanking()));
+        int ranking = row.getRanking();
+        if(ranking == 1) viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background_gold);
+        else if(ranking == 2) viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background_silver);
+        else if(ranking == 3) viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background_bronze);
+        else viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background);
+
+        viewHolder.rank.setText(String.valueOf(ranking));
         viewHolder.name.setText(row.getName());
         viewHolder.name.setTextColor(classColors[row.getClassId() - 1]);
         viewHolder.realm.setText(row.getRealmName());
@@ -70,13 +80,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 getColor(R.color.losses)), wins.length() + 1, span.length(), Spanned.SPAN_INCLUSIVE_EXCLUSIVE);
         viewHolder.season.setText(span);
         viewHolder.faction.setImageResource(row.getFactionId() == 0 ? R.drawable.ic_alliance : R.drawable.ic_horde);
-        //Oh my god blizzard
-        int raceId = row.getRaceId();
-        if (raceId == 26 || raceId == 25 || raceId == 24)
-            raceId = 13;
-        if (raceId == 22)
-            raceId = 12;
 
+        int raceId = row.getRaceId();
         viewHolder.race.setImageResource(row.getGenderId() == 0 ? Constants.MALE_RACES[raceId - 1] : Constants.FEMALE_RACES[raceId - 1]);
         viewHolder.spec.setImageResource(Constants.SPEC_CLASSES[row.getClassId() - 1]);
         viewHolder.itemPosition = i;
@@ -108,13 +113,15 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     public void setSortBy(int sortBy) {
         isSortAscending = (currentSortBy != sortBy) || !isSortAscending;
         this.currentSortBy = sortBy;
-        initData(searchData);
+        //initData(searchData);
+        mFilter.filter("");
     }
 
     public void update(List<Row> data) {
         this.backupData = data;
         this.searchData = data;
-        initData(data);
+        //initData(data);
+        mFilter.filter("");
     }
 
     private void initData(List<Row> data) {
@@ -138,7 +145,32 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
     public void clearAll() {
         searchData = backupData;
-        initData(backupData);
+        //initData(backupData);
+        mFilter.filter("");
+    }
+
+    public void filterFaction(int factionId) {
+        mFilterSpec.toggleFaction(factionId);
+        mFilter.filter("");
+    }
+
+    public void filterClass(int classId) {
+        mFilterSpec.toggleClass(classId);
+        mFilter.filter("");
+    }
+
+    public void filterRace(int raceId) {
+        mFilterSpec.toggleRace(raceId);
+        mFilter.filter("");
+    }
+
+    public void clearFilter() {
+        mFilterSpec.setDefaultValues();
+        mFilter.filter("");
+    }
+
+    public FilterSpec getFilterSpec() {
+        return mFilterSpec;
     }
 
     private class SearchFilter extends Filter {
@@ -151,8 +183,11 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
 
             for(int i = 0; i< backupData.size(); i++) {
                 Row r = backupData.get(i);
-                if(r.getName().toLowerCase().contains(query) || r.getRealmName().toLowerCase().contains(query)) {
-                    filtered.add(r);
+                if(mFilterSpec.isRowValid(r)) {
+                    if (TextUtils.isEmpty(query) || r.getName().toLowerCase().contains(query) ||
+                            r.getRealmName().toLowerCase().contains(query)) {
+                        filtered.add(r);
+                    }
                 }
             }
 
@@ -194,7 +229,7 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
                 o2 = temp;
             }
             switch(currentSortBy) {
-                case Constants.SORT_BY_RAKING:
+                case Constants.SORT_BY_RANKING:
                     return o1.getRanking() - o2.getRanking();
                 case Constants.SORT_BY_NAME:
                     return o1.getName().compareToIgnoreCase(o2.getName());

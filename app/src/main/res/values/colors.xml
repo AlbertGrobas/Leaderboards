@@ -2,12 +2,12 @@
 <resources>
 
     <!-- theme colors -->
-    <color name="primary">#2196F3</color>
-    <color name="primaryDark">#1976D2</color>
-    <color name="accent">#FF4081</color>
-    <color name="colorControlHighlight">#fff</color>
+    <color name="primary">#4C5C68</color>
+    <color name="primaryDark">#46494C</color>
+    <color name="accent">#FFB300</color>
+    <color name="colorControlHighlight">#1985A1</color>
 
-    <color name="row_background">#2B1507</color>
+    <color name="row_background">#2b1507</color>
     <color name="row_background_odd">#231207</color>
     <color name="drawer_background">#ffffff</color>
     <color name="drawer_text_color">#000000</color>
@@ -17,6 +17,7 @@
     <color name="drawer_item_text_selected">#ffb100</color>
     <color name="swipe_refresh_color">#ffb100</color>
     <color name="error_title">#c3c3c3</color>
+
 
     <!-- wow classes colors -->
     <color name="deathknight">#C41F3B</color>
@@ -49,6 +50,11 @@
     <color name="wins">#2dd300</color>
     <color name="losses">#db0000</color>
     <color name="rating">#953203</color>
-    <color name="position">#ffd700</color>
+    <color name="position">#000</color>
+
+    <color name="gold_medal">#C98910</color>
+    <color name="silver_medal">#A8A8A8</color>
+    <color name="bronze_medal">#965A38</color>
+    <color name="ranking_background">#1985A1</color>
 
 </resources>

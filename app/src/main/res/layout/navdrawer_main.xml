@@ -12,7 +12,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin_half"
         android:drawableLeft="@drawable/ic_action_filter_2"
         android:drawablePadding="@dimen/activity_horizontal_margin"
-        android:onClick="onBracketClick"
+        android:onClick="onClickBracket"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="@string/arena2v2" />
 
@@ -24,7 +24,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin_half"
         android:drawableLeft="@drawable/ic_action_filter_3"
         android:drawablePadding="@dimen/activity_horizontal_margin"
-        android:onClick="onBracketClick"
+        android:onClick="onClickBracket"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="@string/arena3v3" />
 
@@ -36,7 +36,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin_half"
         android:drawableLeft="@drawable/ic_action_filter_5"
         android:drawablePadding="@dimen/activity_horizontal_margin"
-        android:onClick="onBracketClick"
+        android:onClick="onClickBracket"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="@string/arena5v5" />
 
@@ -48,7 +48,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin_half"
         android:drawableLeft="@drawable/ic_action_filter_9_plus"
         android:drawablePadding="@dimen/activity_horizontal_margin"
-        android:onClick="onBracketClick"
+        android:onClick="onClickBracket"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="@string/ratedbg" />
 
@@ -62,7 +62,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin_half"
         android:drawableLeft="@drawable/ic_action_settings"
         android:drawablePadding="@dimen/activity_horizontal_margin"
-        android:onClick="onSettingsClick"
+        android:onClick="onClickSettings"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="@string/settings" />
 
@@ -74,7 +74,7 @@
         android:layout_marginTop="@dimen/activity_vertical_margin_half"
         android:drawableLeft="@drawable/ic_action_help"
         android:drawablePadding="@dimen/activity_horizontal_margin"
-        android:onClick="onLicenseClick"
+        android:onClick="onClickLicense"
         android:paddingLeft="@dimen/activity_horizontal_margin"
         android:text="@string/license" />
 
