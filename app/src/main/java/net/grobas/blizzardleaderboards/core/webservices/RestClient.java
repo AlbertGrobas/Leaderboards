@@ -8,14 +8,13 @@ import com.google.gson.GsonBuilder;
 import io.realm.RealmObject;
 import retrofit.RestAdapter;
 import retrofit.android.AndroidLog;
-import retrofit.client.OkClient;
 import retrofit.converter.GsonConverter;
 
 public class RestClient {
 
     private BlizzardApiClient apiClient;
     private String host;
-    private static Gson realmGson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
+    private Gson realmGson = new GsonBuilder().setExclusionStrategies(new ExclusionStrategy() {
         @Override
         public boolean shouldSkipField(FieldAttributes f) {
             return f.getDeclaringClass().equals(RealmObject.class);
@@ -35,11 +34,11 @@ public class RestClient {
     }
 
     private void rebuildClient() {
+
         RestAdapter adapter = new RestAdapter.Builder()
             .setEndpoint("http://"+host)
-            .setClient(new OkClient())
             .setConverter(new GsonConverter(realmGson))
-            .setLogLevel(RestAdapter.LogLevel.HEADERS)
+            .setLogLevel(RestAdapter.LogLevel.FULL)
             .setLog(new AndroidLog("wow-api"))
             .build();
         apiClient = adapter.create(BlizzardApiClient.class);

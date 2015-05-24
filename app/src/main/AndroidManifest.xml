@@ -27,8 +27,7 @@
             android:label="@string/title_activity_character"/>
         <activity
             android:name=".app.ui.SettingsActivity"
-            android:theme="@style/Theme.AppCompat"
-            android:label="Settings"/>
+            android:label="@string/settings"/>
     </application>
 
 </manifest>

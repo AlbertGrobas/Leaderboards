@@ -3,12 +3,10 @@ package net.grobas.blizzardleaderboards.app.ui;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
 
 import net.grobas.blizzardleaderboards.R;
 
 import io.realm.Realm;
-import io.realm.exceptions.RealmException;
 import timber.log.Timber;
 
 public class SettingsFragment extends PreferenceFragment {

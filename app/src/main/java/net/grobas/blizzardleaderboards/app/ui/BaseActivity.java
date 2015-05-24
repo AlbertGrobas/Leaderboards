@@ -63,8 +63,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected void closeNavDrawer() {
         if (mDrawerLayout != null) {
-            mDrawerLayout.closeDrawer(Gravity.START);
-            mDrawerLayout.closeDrawer(Gravity.END);
+            if(mDrawerLayout.isDrawerOpen(Gravity.START))
+                mDrawerLayout.closeDrawer(Gravity.START);
+            if(mDrawerLayout.isDrawerOpen(Gravity.END))
+                mDrawerLayout.closeDrawer(Gravity.END);
         }
     }
 

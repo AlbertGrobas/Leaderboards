@@ -1,11 +1,14 @@
 package net.grobas.blizzardleaderboards.app.domain;
 
+import com.google.gson.annotations.SerializedName;
+
 public class Profile {
 
     private long lastModified;
     private String name;
     private String realm;
     private String battlegroup;
+    @SerializedName("class")
     private int _class;
     private int race;
     private int gender;
@@ -231,5 +234,6 @@ public class Profile {
         this.totalHonorableKills = totalHonorableKills;
     }
 
-
 }
+
+

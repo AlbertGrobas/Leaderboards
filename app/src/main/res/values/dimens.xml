@@ -16,4 +16,5 @@
     <dimen name="card_padding">5dp</dimen>
     <dimen name="card_corner_radius">3dp</dimen>
     <dimen name="ranking_textview_size">40dp</dimen>
+    <dimen name="filterdrawer_witdh">220dp</dimen>
 </resources>
