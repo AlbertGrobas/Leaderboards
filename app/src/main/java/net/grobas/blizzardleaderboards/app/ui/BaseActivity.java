@@ -2,13 +2,14 @@ package net.grobas.blizzardleaderboards.app.ui;
 
 import android.os.Bundle;
 import android.support.annotation.StringRes;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Gravity;
 import android.view.View;
 
 import net.grobas.blizzardleaderboards.R;
@@ -20,8 +21,15 @@ import butterknife.Optional;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    @Optional @InjectView(R.id.layout_drawer) DrawerLayout mDrawerLayout;
-    @Optional @InjectView(R.id.swipe_refresh) SwipeRefreshLayout mSwipeSwipeRefreshLayout;
+    @Optional
+    @InjectView(R.id.layout_drawer)
+    DrawerLayout mDrawerLayout;
+    @Optional
+    @InjectView(R.id.nav_main_start)
+    NavigationView mNavigationView;
+    @Optional
+    @InjectView(R.id.swipe_refresh)
+    SwipeRefreshLayout mSwipeSwipeRefreshLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,27 +66,27 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected boolean isNavDrawerOpen() {
         return mDrawerLayout != null &&
-                (mDrawerLayout.isDrawerOpen(Gravity.START) || mDrawerLayout.isDrawerOpen(Gravity.END));
+                (mDrawerLayout.isDrawerOpen(GravityCompat.START) || mDrawerLayout.isDrawerOpen(GravityCompat.END));
     }
 
     protected void closeNavDrawer() {
         if (mDrawerLayout != null) {
-            if(mDrawerLayout.isDrawerOpen(Gravity.START))
-                mDrawerLayout.closeDrawer(Gravity.START);
-            if(mDrawerLayout.isDrawerOpen(Gravity.END))
-                mDrawerLayout.closeDrawer(Gravity.END);
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.START))
+                mDrawerLayout.closeDrawer(GravityCompat.START);
+            if (mDrawerLayout.isDrawerOpen(GravityCompat.END))
+                mDrawerLayout.closeDrawer(GravityCompat.END);
         }
     }
 
     protected void openDrawer(int gravity) {
-        if(mDrawerLayout != null)
+        if (mDrawerLayout != null)
             mDrawerLayout.openDrawer(gravity);
     }
 
     private void setUpDrawerLayout() {
         //toolbar
         Toolbar mToolbar = (Toolbar) findViewById(R.id.leaderboard_toolbar);
-        if(mToolbar != null) {
+        if (mToolbar != null) {
             setSupportActionBar(mToolbar);
             ActionBar actionBar = getSupportActionBar();
             if (actionBar != null) {
@@ -88,8 +96,8 @@ public abstract class BaseActivity extends AppCompatActivity {
             }
         }
         //drawer
-        if(mDrawerLayout != null) {
-            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, Gravity.START);
+        if (mDrawerLayout != null) {
+            mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow, GravityCompat.START);
             ActionBarDrawerToggle mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                     mToolbar, R.string.open, R.string.close) {
 
@@ -104,11 +112,11 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             };
             mDrawerLayout.setDrawerListener(mDrawerToggle);
-            createNavDrawerContents();
+            createNavDrawerContents(mNavigationView);
         }
 
         //swipe refresh
-        if(mSwipeSwipeRefreshLayout != null) {
+        if (mSwipeSwipeRefreshLayout != null) {
             mSwipeSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
                 public void onRefresh() {
@@ -121,7 +129,7 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     protected abstract void updateContents();
 
-    protected abstract void createNavDrawerContents();
+    protected abstract void createNavDrawerContents(NavigationView mNavigationView);
 
 
     protected void setToolbarTitle(String title) {

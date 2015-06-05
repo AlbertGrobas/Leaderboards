@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/menu_2v2"
+            android:icon="@drawable/ic_action_filter_2"
+            android:title="@string/arena2v2" />
+        <item
+            android:id="@+id/menu_3v3"
+            android:icon="@drawable/ic_action_filter_3"
+            android:title="@string/arena3v3" />
+        <item
+            android:id="@+id/menu_5v5"
+            android:icon="@drawable/ic_action_filter_5"
+            android:title="@string/arena5v5" />
+        <item
+            android:id="@+id/menu_rbg"
+            android:icon="@drawable/ic_action_filter_9_plus"
+            android:title="@string/ratedbg" />
+    </group>
+
+    <item android:title="Other Options">
+        <menu>
+
+            <item
+                android:id="@+id/menu_settings"
+                android:icon="@drawable/ic_action_settings"
+                android:title="@string/settings" />
+            <item
+                android:id="@+id/menu_license"
+                android:icon="@drawable/ic_action_help"
+                android:title="@string/license" />
+        </menu>
+    </item>
+</menu>

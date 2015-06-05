@@ -1,15 +1,21 @@
 package net.grobas.blizzardleaderboards.app.ui;
 
 import android.os.Bundle;
+import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.NavigationView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.squareup.picasso.Picasso;
+
 import net.grobas.blizzardleaderboards.R;
-import net.grobas.blizzardleaderboards.app.domain.Profile;
+import net.grobas.blizzardleaderboards.app.domain.CharacterProfile;
 import net.grobas.blizzardleaderboards.app.util.Constants;
 import net.grobas.blizzardleaderboards.core.LeaderboardDataService;
 
@@ -19,12 +25,14 @@ import rx.Subscription;
 import rx.android.app.AppObservable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
+import timber.log.Timber;
 
-public class CharacterActivity extends BaseActivity implements Observer<Profile> {
+public class CharacterActivity extends BaseActivity implements Observer<CharacterProfile> {
 
-    @InjectView(R.id.character_name) TextView characterName;
     private Subscription profileSubscription;
-    private Profile characterProfile;
+    private CharacterProfile characterProfile;
+    private String name;
+    private String realmName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,16 +44,14 @@ public class CharacterActivity extends BaseActivity implements Observer<Profile>
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        String name = getIntent().getStringExtra(Constants.INTENT_CHARACTER_NAME);
-        String realmName = getIntent().getStringExtra(Constants.INTENT_REALM_NAME);
-        setToolbarTitle(name);
-        setToolbarSubtitle(realmName);
+        name = getIntent().getStringExtra(Constants.INTENT_CHARACTER_NAME);
+        realmName = getIntent().getStringExtra(Constants.INTENT_REALM_NAME);
 
-        profileSubscription = AppObservable.bindActivity(
-                this, LeaderboardDataService.getInstance().getCharacterProfile(realmName, name))
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.newThread())
-                .subscribe(this);
+        CollapsingToolbarLayout collapsingToolbar =
+                (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+        collapsingToolbar.setTitle(name);
+
+        getCharacterProfile(false);
     }
 
     @Override
@@ -56,7 +62,7 @@ public class CharacterActivity extends BaseActivity implements Observer<Profile>
     }
 
     @Override
-    protected void createNavDrawerContents() {
+    protected void createNavDrawerContents(NavigationView mNavigationView) {
         LinearLayout parent = (LinearLayout) findViewById(R.id.drawer_contents);
         LinearLayout contents = (LinearLayout) getLayoutInflater().inflate(R.layout.navdrawer_profile, parent, false);
         parent.addView(contents);
@@ -65,7 +71,15 @@ public class CharacterActivity extends BaseActivity implements Observer<Profile>
 
     @Override
     protected void updateContents() {
+        getCharacterProfile(true);
+    }
 
+    private void getCharacterProfile(boolean forceUpdate) {
+        profileSubscription = AppObservable.bindActivity(
+            this, LeaderboardDataService.getInstance().getCharacterProfile(realmName, name, forceUpdate))
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.newThread())
+            .subscribe(this);
     }
 
     @Override
@@ -74,13 +88,13 @@ public class CharacterActivity extends BaseActivity implements Observer<Profile>
     }
 
     @Override
-    public void onNext(Profile profile) {
+    public void onNext(CharacterProfile profile) {
         characterProfile = profile;
         updateDataProfile();
     }
 
     private void updateDataProfile() {
-        characterName.setText(characterProfile.getName());
+
     }
 
     @Override

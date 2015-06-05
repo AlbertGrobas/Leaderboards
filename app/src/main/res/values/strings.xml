@@ -57,5 +57,6 @@
     <string name="undead">Undead</string>
     <string name="worgen">Worgen</string>
     <string name="order_filter">Order and Filter</string>
+    <string name="world_of_warcraft">World of Warcraft</string>
 
 </resources>

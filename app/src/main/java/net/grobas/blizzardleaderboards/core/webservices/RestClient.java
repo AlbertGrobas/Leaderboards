@@ -38,7 +38,7 @@ public class RestClient {
         RestAdapter adapter = new RestAdapter.Builder()
             .setEndpoint("http://"+host)
             .setConverter(new GsonConverter(realmGson))
-            .setLogLevel(RestAdapter.LogLevel.FULL)
+            .setLogLevel(RestAdapter.LogLevel.HEADERS)
             .setLog(new AndroidLog("wow-api"))
             .build();
         apiClient = adapter.create(BlizzardApiClient.class);

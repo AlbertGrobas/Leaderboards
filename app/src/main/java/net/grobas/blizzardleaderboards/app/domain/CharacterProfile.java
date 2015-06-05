@@ -1,15 +1,12 @@
 package net.grobas.blizzardleaderboards.app.domain;
 
-import com.google.gson.annotations.SerializedName;
-
-public class Profile {
+public class CharacterProfile {
 
     private long lastModified;
     private String name;
     private String realm;
     private String battlegroup;
-    @SerializedName("class")
-    private int _class;
+    private int specClass;
     private int race;
     private int gender;
     private int level;
@@ -93,19 +90,19 @@ public class Profile {
     /**
      *
      * @return
-     * The _class
+     * The specClass
      */
-    public int getClass_() {
-        return _class;
+    public int getSpecClass() {
+        return specClass;
     }
 
     /**
      *
-     * @param _class
+     * @param specClass
      * The class
      */
-    public void setClass_(int _class) {
-        this._class = _class;
+    public void setSpecClass(int specClass) {
+        this.specClass = specClass;
     }
 
     /**

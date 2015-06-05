@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -47,7 +48,8 @@ import rx.schedulers.Schedulers;
 import timber.log.Timber;
 
 public class MainActivity extends BaseActivity implements SearchView.OnQueryTextListener,
-        MenuItemCompat.OnActionExpandListener, Observer<Leaderboard> {
+        MenuItemCompat.OnActionExpandListener, Observer<Leaderboard>,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private final static String SAVE_BRACKET_STATE = "bracket_state";
     private final static String SAVE_ORDER_STATE = "order_state";
@@ -68,8 +70,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             R.id.filter_pandaren, R.id.filter_tauren, R.id.filter_troll, R.id.filter_worgen,
             R.id.filter_night_elf, R.id.filter_undead}) List<CheckBox> filterList;
 
-    private DrawerTextView currentBracketSelected;
-    private int selectedBracketId = R.id.drawer_2v2;
+    private int selectedBracketId = R.id.menu_2v2;
     private int currentBracket = 0;
 
     private DrawerTextView currentOrderSelected;
@@ -97,7 +98,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             currentBracket = savedInstanceState.getInt(SAVE_BRACKET_STATE, 0);
             currentOrder = savedInstanceState.getInt(SAVE_ORDER_STATE, 0);
             firstViewVisible = savedInstanceState.getInt(SAVE_FIRST_VIEW_STATE, 0);
-            selectedBracketId = savedInstanceState.getInt(SAVE_BRACKET_SELECTED_ID, R.id.drawer_2v2);
+            selectedBracketId = savedInstanceState.getInt(SAVE_BRACKET_SELECTED_ID, R.id.menu_2v2);
             selectedOrderId = savedInstanceState.getInt(SAVE_ORDER_SELECTED_ID, R.id.order_ranking);
         }
     }
@@ -108,7 +109,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
         mRecyclerView.setLayoutManager(mLayoutManager);
         mRecyclerView.setHasFixedSize(true);
-        mRecyclerView.addItemDecoration(new DividerItemDecoration(1));
+        //mRecyclerView.addItemDecoration(new DividerItemDecoration(1));
         mRecyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 
@@ -137,7 +138,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         Row row = response.getLeaderboardItem();
         Intent intent = new Intent(this, CharacterActivity.class);
         intent.putExtra(Constants.INTENT_CHARACTER_NAME, row.getName());
-        intent.putExtra(Constants.INTENT_REALM_NAME, row.getRealmSlug());
+        intent.putExtra(Constants.INTENT_REALM_NAME, row.getRealmName());
         startActivity(intent);
     }
 
@@ -148,7 +149,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         outState.putInt(SAVE_FIRST_VIEW_STATE, mLayoutManager.findFirstVisibleItemPosition());
         outState.putInt(SAVE_BRACKET_SELECTED_ID, selectedBracketId);
         outState.putInt(SAVE_ORDER_SELECTED_ID, selectedOrderId);
-        outState.putParcelable(SAVE_FILTER_SPEC, mAdapter.getFilterSpec());
+        if(mAdapter != null && mAdapter.getFilterSpec() != null)
+            outState.putParcelable(SAVE_FILTER_SPEC, mAdapter.getFilterSpec());
         super.onSaveInstanceState(outState);
     }
 
@@ -158,7 +160,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         currentBracket = savedInstanceState.getInt(SAVE_BRACKET_STATE, 0);
         currentOrder = savedInstanceState.getInt(SAVE_ORDER_STATE, 0);
         firstViewVisible = savedInstanceState.getInt(SAVE_FIRST_VIEW_STATE, 0);
-        selectedBracketId = savedInstanceState.getInt(SAVE_BRACKET_SELECTED_ID, R.id.drawer_2v2);
+        selectedBracketId = savedInstanceState.getInt(SAVE_BRACKET_SELECTED_ID, R.id.menu_2v2);
         selectedOrderId = savedInstanceState.getInt(SAVE_ORDER_SELECTED_ID, R.id.order_ranking);
         filterSpec = savedInstanceState.getParcelable(SAVE_FILTER_SPEC);
     }
@@ -276,62 +278,53 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @Override
-    protected void createNavDrawerContents() {
-        LinearLayout parent = (LinearLayout) findViewById(R.id.drawer_contents);
-        parent.addView(getLayoutInflater().inflate(R.layout.navdrawer_main, parent, false));
+    protected void createNavDrawerContents(NavigationView navigationView) {
 
-        currentBracketSelected = ButterKnife.findById(parent, selectedBracketId);
-        currentBracketSelected.setBackgroundResource(R.drawable.drawer_item_selected_background);
-        currentBracketSelected.setTextColor(getResources().getColor(R.color.drawer_item_text_selected));
+        if(navigationView != null) {
+            navigationView.setNavigationItemSelectedListener(this);
+            navigationView.getMenu().findItem(selectedBracketId).setChecked(true);
+        }
 
         currentOrderSelected = ButterKnife.findById(this, selectedOrderId);
         currentOrderSelected.setBackgroundResource(R.drawable.drawer_item_selected_background);
         currentOrderSelected.setTextColor(getResources().getColor(R.color.drawer_item_text_selected));
     }
 
-    public void onClickSettings(View v) {
-        startActivity(new Intent(this, SettingsActivity.class));
-    }
+    @Override
+    public boolean onNavigationItemSelected(MenuItem menuItem) {
 
-    public void onClickLicense(View v) {
-        //TODO
-    }
-
-    public void onClickBracket(View v) {
-        DrawerTextView textView = (DrawerTextView) v;
-        if(textView.getId() == currentBracketSelected.getId())
-            return;
-
-        currentBracketSelected.setBackgroundResource(R.drawable.drawer_item_background);
-        currentBracketSelected.setTextColor(getResources().getColor(R.color.drawer_text_color));
-        textView.setBackgroundResource(R.drawable.drawer_item_selected_background);
-        textView.setTextColor(getResources().getColor(R.color.drawer_item_text_selected));
-
-        switch (v.getId()) {
-            case R.id.drawer_2v2:
+        switch (menuItem.getItemId()) {
+            case R.id.menu_2v2:
                 currentBracket = 0;
                 setToolbarTitle(R.string.arena2v2);
                 break;
-            case R.id.drawer_3v3:
+            case R.id.menu_3v3:
                 currentBracket = 1;
                 setToolbarTitle(R.string.arena3v3);
                 break;
-            case R.id.drawer_5v5:
+            case R.id.menu_5v5:
                 currentBracket = 2;
                 setToolbarTitle(R.string.arena5v5);
                 break;
-            case R.id.drawer_rbg:
+            case R.id.menu_rbg:
                 currentBracket = 3;
                 setToolbarTitle(R.string.ratedbg);
                 break;
+            case R.id.menu_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                return true;
+            case R.id.menu_license:
+                //TODO
+                return true;
         }
-        currentBracketSelected = textView;
-        selectedBracketId = v.getId();
-        firstViewVisible = 0;
 
+        selectedBracketId = menuItem.getItemId();
+        menuItem.setChecked(true);
         startLoading();
         setDataFromService(false);
         closeNavDrawer();
+
+        return true;
     }
 
     @Override

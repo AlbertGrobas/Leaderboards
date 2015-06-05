@@ -1,66 +1,22 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/layout_drawer"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <include layout="@layout/leaderboard_list" />
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/swipe_refresh"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/leaderboard_toolbar">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/widget_listView"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="vertical" />
-        </android.support.v4.widget.SwipeRefreshLayout>
-
-        <FrameLayout
-            android:id="@+id/loading_layer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/windowBackground">
-
-            <ProgressBar
-                style="?android:progressBarStyle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center" />
-
-        </FrameLayout>
-
-        <FrameLayout
-            android:id="@+id/error_layer"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="?android:attr/windowBackground"
-            android:visibility="gone">
-
-            <TextView
-                style="?attr/titleTextAppearance"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:drawableTop="@drawable/ic_action_warning"
-                android:text="@string/error_layout"
-                android:textColor="@color/error_title"
-                android:textStyle="bold" />
-
-        </FrameLayout>
-
-        <include
-            android:id="@+id/leaderboard_toolbar"
-            layout="@layout/toolbar" />
-    </RelativeLayout>
-
-    <include layout="@layout/navdrawer_base" />
+    <android.support.design.widget.NavigationView
+        android:id="@+id/nav_main_start"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        app:headerLayout="@layout/nav_header"
+        app:menu="@menu/menu_nav_drawer" />
 
     <include layout="@layout/filterdrawer_main" />
+
 </android.support.v4.widget.DrawerLayout>
 
 

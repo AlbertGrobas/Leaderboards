@@ -24,10 +24,10 @@
         </activity>
         <activity
             android:name=".app.ui.CharacterActivity"
-            android:label="@string/title_activity_character"/>
+            android:label="@string/title_activity_character" />
         <activity
             android:name=".app.ui.SettingsActivity"
-            android:label="@string/settings"/>
+            android:label="@string/settings" />
     </application>
 
 </manifest>

@@ -3,10 +3,11 @@ package net.grobas.blizzardleaderboards.core;
 import android.content.Context;
 
 import net.grobas.blizzardleaderboards.app.domain.Leaderboard;
-import net.grobas.blizzardleaderboards.app.domain.Profile;
+import net.grobas.blizzardleaderboards.app.domain.CharacterProfile;
 import net.grobas.blizzardleaderboards.app.domain.Row;
 import net.grobas.blizzardleaderboards.core.database.ObservableDAO;
 import net.grobas.blizzardleaderboards.core.database.model.RealmLeaderboard;
+import net.grobas.blizzardleaderboards.core.database.model.RealmCharacterProfile;
 import net.grobas.blizzardleaderboards.core.database.model.RealmRow;
 import net.grobas.blizzardleaderboards.core.webservices.RestClient;
 
@@ -24,9 +25,11 @@ public class LeaderboardDataService {
 
     private String mHost;
     private ObservableDAO mDAO;
-    private RestClient mClient = new RestClient();
+    private RestClient mClient;
 
-    private LeaderboardDataService() {}
+    private LeaderboardDataService() {
+        mClient = new RestClient();
+    }
 
     public static LeaderboardDataService getInstance() {
         return INSTANCE;
@@ -39,6 +42,10 @@ public class LeaderboardDataService {
     public void setHost(String host) {
         mHost = host;
         mClient.setHost(host);
+    }
+
+    public String getHost() {
+        return mHost;
     }
 
     public Observable<Leaderboard> getLeaderboard(final String bracket, final boolean forceUpdate) {
@@ -76,8 +83,53 @@ public class LeaderboardDataService {
         });
     }
 
-    public Observable<Profile> getCharacterProfile(final String realmName, final String name) {
-        return mClient.getApiClient().characterProfileObservable(realmName, name, Locale.getDefault().toString());
+    public Observable<CharacterProfile> getCharacterProfile(final String realmName, final String name, final boolean forceUpdate) {
+        final Observable<RealmCharacterProfile> apiObservable = mClient.getApiClient().
+                characterProfileObservable(realmName, name, Locale.getDefault().toString());
+        final Observable<RealmCharacterProfile> dbObservable = mDAO.readCharacterProfile(realmName, name);
+
+        return dbObservable.exists(new Func1<RealmCharacterProfile, Boolean>() {
+            @Override
+            @DebugLog
+            public Boolean call(RealmCharacterProfile profile) {
+                return (profile != null);
+            }
+        }).flatMap(new Func1<Boolean, Observable<RealmCharacterProfile>>() {
+            @Override
+            @DebugLog
+            public Observable<RealmCharacterProfile> call(Boolean inDB) {
+                return (inDB && !forceUpdate) ? dbObservable : apiObservable;
+            }
+        }).flatMap(new Func1<RealmCharacterProfile, Observable<RealmCharacterProfile>>() {
+            @Override
+            @DebugLog
+            public Observable<RealmCharacterProfile> call(RealmCharacterProfile profile) {
+                return mDAO.writeCharacterProfile(profile, forceUpdate);
+            }
+        }).map(new Func1<RealmCharacterProfile, CharacterProfile>() {
+            @Override
+            @DebugLog
+            public CharacterProfile call(RealmCharacterProfile profile) {
+                return realmToProfile(profile);
+            }
+        });
+    }
+
+    private static CharacterProfile realmToProfile(RealmCharacterProfile realmProfile) {
+        CharacterProfile profile = new CharacterProfile();
+        profile.setLastModified(realmProfile.getLastModified());
+        profile.setName(realmProfile.getName());
+        profile.setRealm(realmProfile.getRealmName());
+        profile.setBattlegroup(realmProfile.getBattlegroup());
+        profile.setSpecClass(realmProfile.getSpecClass());
+        profile.setRace(realmProfile.getRace());
+        profile.setGender(realmProfile.getGender());
+        profile.setLevel(realmProfile.getLevel());
+        profile.setAchievementPoints(realmProfile.getAchievementPoints());
+        profile.setThumbnail(realmProfile.getThumbnail());
+        profile.setCalcClass(realmProfile.getCalcClass());
+        profile.setTotalHonorableKills(realmProfile.getTotalHonorableKills());
+        return profile;
     }
 
     private static Leaderboard realmToLeaderboard(RealmLeaderboard realmLeaderboard) {

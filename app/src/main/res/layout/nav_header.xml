@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:background="@drawable/background"
+    android:layout_height="@dimen/navdrawer_top_height" >
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:src="@drawable/logowow"
+        android:scaleType="centerCrop"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:gravity="bottom"
+        android:text="@string/world_of_warcraft"
+        android:padding="5dp"
+        android:textColor="@android:color/white"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:layout_height="match_parent" />
+
+</FrameLayout>

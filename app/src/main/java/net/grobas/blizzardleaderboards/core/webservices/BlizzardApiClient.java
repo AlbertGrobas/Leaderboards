@@ -1,7 +1,7 @@
 package net.grobas.blizzardleaderboards.core.webservices;
 
-import net.grobas.blizzardleaderboards.app.domain.Profile;
 import net.grobas.blizzardleaderboards.core.database.model.RealmLeaderboard;
+import net.grobas.blizzardleaderboards.core.database.model.RealmCharacterProfile;
 
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -23,12 +23,12 @@ public interface BlizzardApiClient {
 
     @GET("/api/wow/character/{realm}/{name}")
     void characterProfileAsync(@Path("realm") String realm, @Path("name") String name, @Query("locale") String locale,
-                        Callback<Profile> response);
+                        Callback<RealmCharacterProfile> response);
 
     @GET("/api/wow/character/{realm}/{name}")
-    Profile characterProfile(@Path("realm") String realm, @Path("name") String name, @Query("locale") String locale);
+    RealmCharacterProfile characterProfile(@Path("realm") String realm, @Path("name") String name, @Query("locale") String locale);
 
     @GET("/api/wow/character/{realm}/{name}")
-    Observable<Profile> characterProfileObservable(@Path("realm") String realm, @Path("name") String name, @Query("locale") String locale);
+    Observable<RealmCharacterProfile> characterProfileObservable(@Path("realm") String realm, @Path("name") String name, @Query("locale") String locale);
 
 }

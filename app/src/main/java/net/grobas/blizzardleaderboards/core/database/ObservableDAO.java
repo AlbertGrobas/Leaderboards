@@ -3,18 +3,19 @@ package net.grobas.blizzardleaderboards.core.database;
 import android.content.Context;
 
 import net.grobas.blizzardleaderboards.core.database.model.RealmLeaderboard;
+import net.grobas.blizzardleaderboards.core.database.model.RealmCharacterProfile;
 import net.grobas.blizzardleaderboards.core.database.rx.RealmObservable;
 
-import hugo.weaving.DebugLog;
 import io.realm.Realm;
-import io.realm.RealmObject;
 import rx.Observable;
 import rx.functions.Func1;
 
 public class ObservableDAO {
 
-    private static String COLUMN_BRACKET = "bracket";
-    private static String COLUMN_HOST = "host";
+    private static final String COLUMN_BRACKET = "bracket";
+    private static final String COLUMN_HOST = "host";
+    private static final String COLUMN_REALM = "realmName";
+    private static final String COLUMN_NAME = "name";
 
     private Context context;
 
@@ -42,6 +43,30 @@ public class ObservableDAO {
                     lb.removeFromRealm();
                 realm.copyToRealm(leaderboard);
                 return leaderboard;
+            }
+        });
+    }
+
+    public Observable<RealmCharacterProfile> readCharacterProfile(final String realmName, final String name) {
+        return RealmObservable.object(context, new Func1<Realm, RealmCharacterProfile>() {
+            @Override
+            public RealmCharacterProfile call(Realm realm) {
+                return realm.where(RealmCharacterProfile.class).equalTo(COLUMN_REALM, realmName).
+                        equalTo(COLUMN_NAME, name).findFirst();
+            }
+        });
+    }
+
+    public Observable<RealmCharacterProfile> writeCharacterProfile(final RealmCharacterProfile profile, final boolean forceUpdate) {
+        return RealmObservable.object(context, new Func1<Realm, RealmCharacterProfile>() {
+            @Override
+            public RealmCharacterProfile call(Realm realm) {
+                RealmCharacterProfile pf = realm.where(RealmCharacterProfile.class).equalTo(COLUMN_REALM, profile.getRealmName()).
+                        equalTo(COLUMN_NAME, profile.getName()).findFirst();
+                if(pf != null && forceUpdate)
+                    pf.removeFromRealm();
+                realm.copyToRealm(profile);
+                return profile;
             }
         });
     }

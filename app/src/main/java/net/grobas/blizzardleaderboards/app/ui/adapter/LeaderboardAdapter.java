@@ -113,14 +113,12 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
     public void setSortBy(int sortBy) {
         isSortAscending = (currentSortBy != sortBy) || !isSortAscending;
         this.currentSortBy = sortBy;
-        //initData(searchData);
         mFilter.filter("");
     }
 
     public void update(List<Row> data) {
         this.backupData = data;
         this.searchData = data;
-        //initData(data);
         mFilter.filter("");
     }
 

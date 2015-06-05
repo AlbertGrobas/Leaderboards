@@ -11,7 +11,7 @@
     <dimen name="activity_horizontal_margin_double_double">64dp</dimen>
 
     <dimen name="drawer_width">300dp</dimen>
-    <dimen name="navdrawer_top_height">140dp</dimen>
+    <dimen name="navdrawer_top_height">196dp</dimen>
     <dimen name="card_elevation">2dp</dimen>
     <dimen name="card_padding">5dp</dimen>
     <dimen name="card_corner_radius">3dp</dimen>
