@@ -76,6 +76,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
     private int selectedBracketId = R.id.menu_2v2;
     private int currentBracket = 0;
+    private String[] toolbarTitles;
 
     private DrawerTextView currentOrderSelected;
     private int selectedOrderId = R.id.order_ranking;
@@ -105,6 +106,9 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             selectedBracketId = savedInstanceState.getInt(SAVE_BRACKET_SELECTED_ID, R.id.menu_2v2);
             selectedOrderId = savedInstanceState.getInt(SAVE_ORDER_SELECTED_ID, R.id.order_ranking);
         }
+
+        toolbarTitles = getResources().getStringArray(R.array.bracket_list);
+        Timber.e("id-"+toolbarTitles[0]);
     }
 
     @Override
@@ -300,10 +304,10 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     protected void createNavDrawerContents(NavigationView navigationView) {
-
         if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
             navigationView.getMenu().findItem(selectedBracketId).setChecked(true);
+            setToolbarTitle(toolbarTitles[currentBracket]);
         }
 
         currentOrderSelected = ButterKnife.findById(this, selectedOrderId);

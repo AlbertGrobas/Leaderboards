@@ -15,4 +15,11 @@
         <item>tw.battle.net</item>
         <item>www.battlenet.com.cn</item>
     </string-array>
+
+    <string-array name="bracket_list">
+        <item>@string/arena2v2</item>
+        <item>@string/arena3v3</item>
+        <item>@string/arena5v5</item>
+        <item>@string/ratedbg</item>
+    </string-array>
 </resources>
