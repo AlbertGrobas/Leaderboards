@@ -2,6 +2,12 @@
 
 A sample application using Retrofit, RxJava, Realm and others.
 Shows pvp leaderboards from World of Warcraft API.
+under construction.
+
+![Demo Screenshot 1][1]
+![Demo Screenshot 2][2]
+![Demo Screenshot 3][3]
+![Demo Screenshot 4][4]
 
 ## Retrofit
 
@@ -41,4 +47,8 @@ License
     See the License for the specific language governing permissions and
     limitations under the License.
 
+[1]: ./art/screen01.png
+[2]: ./art/screen02.png
+[3]: ./art/screen03.png
+[4]: ./art/screen04.png
 
