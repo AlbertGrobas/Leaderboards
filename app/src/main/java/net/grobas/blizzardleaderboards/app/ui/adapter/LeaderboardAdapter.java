@@ -62,7 +62,8 @@ public class LeaderboardAdapter extends RecyclerView.Adapter<LeaderboardAdapter.
         if(ranking == 1) viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background_gold);
         else if(ranking == 2) viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background_silver);
         else if(ranking == 3) viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background_bronze);
-        else viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background);
+        else if(row.getFactionId() == 0) viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background_alliance);
+        else viewHolder.rank.setBackgroundResource(R.drawable.ranking_textview_background_horde);
 
         viewHolder.rank.setText(String.valueOf(ranking));
         viewHolder.name.setText(row.getName());

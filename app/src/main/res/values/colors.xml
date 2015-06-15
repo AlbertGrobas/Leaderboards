@@ -55,6 +55,7 @@
     <color name="gold_medal">#C98910</color>
     <color name="silver_medal">#A8A8A8</color>
     <color name="bronze_medal">#965A38</color>
-    <color name="ranking_background">#1985A1</color>
+    <color name="ranking_alliance">#0095CC</color>
+    <color name="ranking_horde">#CA1111</color>
 
 </resources>

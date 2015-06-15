@@ -8,7 +8,7 @@
         android:id="@+id/row_pvp_rank"
         android:layout_width="@dimen/ranking_textview_size"
         android:layout_height="@dimen/ranking_textview_size"
-        android:background="@drawable/ranking_textview_background"
+        android:background="@drawable/ranking_textview_background_alliance"
         android:gravity="center"
         android:textColor="@color/position"
         android:textStyle="bold" />
