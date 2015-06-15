@@ -28,6 +28,11 @@
         <activity
             android:name=".app.ui.SettingsActivity"
             android:label="@string/settings" />
+
+        <provider
+            android:authorities="net.grobas.blizzardleaderboards.app.ui.custom.RecentSearchProvider"
+            android:name="net.grobas.blizzardleaderboards.app.ui.custom.RecentSearchProvider" >
+        </provider>
     </application>
 
 </manifest>

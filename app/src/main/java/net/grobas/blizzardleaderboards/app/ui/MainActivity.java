@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.provider.SearchRecentSuggestions;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.MenuItemCompat;
@@ -18,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 
 import com.squareup.otto.Subscribe;
 
@@ -27,8 +27,8 @@ import net.grobas.blizzardleaderboards.app.domain.Leaderboard;
 import net.grobas.blizzardleaderboards.app.domain.Row;
 import net.grobas.blizzardleaderboards.app.ui.adapter.FilterSpec;
 import net.grobas.blizzardleaderboards.app.ui.adapter.LeaderboardAdapter;
-import net.grobas.blizzardleaderboards.app.ui.custom.DividerItemDecoration;
 import net.grobas.blizzardleaderboards.app.ui.custom.DrawerTextView;
+import net.grobas.blizzardleaderboards.app.ui.custom.RecentSearchProvider;
 import net.grobas.blizzardleaderboards.app.util.Constants;
 import net.grobas.blizzardleaderboards.core.LeaderboardDataService;
 
@@ -58,9 +58,12 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     private final static String SAVE_ORDER_SELECTED_ID = "order_id";
     private final static String SAVE_FILTER_SPEC = "filter_spec";
 
-    @InjectView(R.id.widget_listView) RecyclerView mRecyclerView;
-    @InjectView(R.id.loading_layer) FrameLayout loadingLayout;
-    @InjectView(R.id.error_layer) FrameLayout errorLayout;
+    @InjectView(R.id.widget_listView)
+    RecyclerView mRecyclerView;
+    @InjectView(R.id.loading_layer)
+    FrameLayout loadingLayout;
+    @InjectView(R.id.error_layer)
+    FrameLayout errorLayout;
 
     @InjectViews({R.id.filter_alliance, R.id.filter_horde, R.id.filter_dk, R.id.filter_druid,
             R.id.filter_hunter, R.id.filter_mage, R.id.filter_monk, R.id.filter_paladin,
@@ -68,7 +71,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
             R.id.filter_warrior, R.id.filter_blood_elf, R.id.filter_draenei, R.id.filter_dwarf,
             R.id.filter_gnome, R.id.filter_goblin, R.id.filter_human, R.id.filter_orc,
             R.id.filter_pandaren, R.id.filter_tauren, R.id.filter_troll, R.id.filter_worgen,
-            R.id.filter_night_elf, R.id.filter_undead}) List<CheckBox> filterList;
+            R.id.filter_night_elf, R.id.filter_undead})
+    List<CheckBox> filterList;
 
     private int selectedBracketId = R.id.menu_2v2;
     private int currentBracket = 0;
@@ -94,7 +98,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         setContentView(R.layout.activity_main);
 
         mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-        if(savedInstanceState != null) {
+        if (savedInstanceState != null) {
             currentBracket = savedInstanceState.getInt(SAVE_BRACKET_STATE, 0);
             currentOrder = savedInstanceState.getInt(SAVE_ORDER_STATE, 0);
             firstViewVisible = savedInstanceState.getInt(SAVE_FIRST_VIEW_STATE, 0);
@@ -129,7 +133,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     protected void onStop() {
         super.onStop();
-        if(leaderboardSubscription != null && !leaderboardSubscription.isUnsubscribed())
+        if (leaderboardSubscription != null && !leaderboardSubscription.isUnsubscribed())
             leaderboardSubscription.unsubscribe();
     }
 
@@ -149,7 +153,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
         outState.putInt(SAVE_FIRST_VIEW_STATE, mLayoutManager.findFirstVisibleItemPosition());
         outState.putInt(SAVE_BRACKET_SELECTED_ID, selectedBracketId);
         outState.putInt(SAVE_ORDER_SELECTED_ID, selectedOrderId);
-        if(mAdapter != null && mAdapter.getFilterSpec() != null)
+        if (mAdapter != null && mAdapter.getFilterSpec() != null)
             outState.putParcelable(SAVE_FILTER_SPEC, mAdapter.getFilterSpec());
         super.onSaveInstanceState(outState);
     }
@@ -190,7 +194,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     public void onNext(Leaderboard leaderboard) {
         stopLoading();
-        if(mAdapter == null) {
+        if (mAdapter == null) {
             mAdapter = new LeaderboardAdapter(MainActivity.this, leaderboard, filterSpec, currentOrder);
             mRecyclerView.setAdapter(mAdapter);
         } else {
@@ -206,7 +210,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     private void startLoading() {
-        if(mAdapter != null)
+        if (mAdapter != null)
             mAdapter.clear();
         errorLayout.setVisibility(View.GONE);
         loadingLayout.setVisibility(View.VISIBLE);
@@ -215,16 +219,16 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     protected void updateContents() {
         firstViewVisible = 0;
-        if(mSearchMenuItem.isActionViewExpanded())
+        if (mSearchMenuItem.isActionViewExpanded())
             mSearchMenuItem.collapseActionView();
-        if(errorLayout.isShown())
+        if (errorLayout.isShown())
             startLoading();
         setDataFromService(true);
     }
 
     private void setDataFromService(boolean forceUpdate) {
         leaderboardSubscription = AppObservable.bindActivity(this,
-            LeaderboardDataService.getInstance().getLeaderboard(Constants.BRACKET_LIST[currentBracket], forceUpdate))
+                LeaderboardDataService.getInstance().getLeaderboard(Constants.BRACKET_LIST[currentBracket], forceUpdate))
                 .delay(500, TimeUnit.MILLISECONDS)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
@@ -239,7 +243,21 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
         SearchView searchView = (SearchView) mSearchMenuItem.getActionView();
         searchView.setQueryHint(getString(R.string.search_hint));
+        searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionClick(int position) {
+                return false;
+            }
+
+            @Override
+            public boolean onSuggestionSelect(int position) {
+                return false;
+            }
+
+        });
+
         searchView.setOnQueryTextListener(this);
+
         return true;
     }
 
@@ -247,14 +265,17 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     public boolean onQueryTextSubmit(String query) {
         //Avoid bug: this is called twice in some devices (ACTION_UP and ACTION_DOWN)
         long actualSearchTime = Calendar.getInstance().getTimeInMillis();
-        if(actualSearchTime < lastSearchTime + 1000)
+        if (actualSearchTime < lastSearchTime + 1000)
             return true;
 
         lastSearchTime = actualSearchTime;
-        if(TextUtils.isEmpty(query)) {
+        if (TextUtils.isEmpty(query)) {
             mAdapter.clearAll();
         } else {
             lastQuery = query;
+            SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+                    RecentSearchProvider.AUTHORITY, RecentSearchProvider.MODE);
+            suggestions.saveRecentQuery(query, null);
             mAdapter.getFilter().filter(query);
         }
         return true;
@@ -267,7 +288,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public boolean onMenuItemActionCollapse(MenuItem item) {
-        if(!TextUtils.isEmpty(lastQuery))
+        if (!TextUtils.isEmpty(lastQuery))
             mAdapter.clearAll();
         return true;
     }
@@ -280,7 +301,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     @Override
     protected void createNavDrawerContents(NavigationView navigationView) {
 
-        if(navigationView != null) {
+        if (navigationView != null) {
             navigationView.setNavigationItemSelectedListener(this);
             navigationView.getMenu().findItem(selectedBracketId).setChecked(true);
         }
@@ -292,7 +313,6 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
 
     @Override
     public boolean onNavigationItemSelected(MenuItem menuItem) {
-
         switch (menuItem.getItemId()) {
             case R.id.menu_2v2:
                 currentBracket = 0;
@@ -344,7 +364,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     public void onClickOrder(DrawerTextView v) {
         int id = v.getId();
 
-        if(currentOrderSelected.getId() != id) {
+        if (currentOrderSelected.getId() != id) {
             currentOrderSelected.setBackgroundResource(R.drawable.drawer_item_background);
             currentOrderSelected.setTextColor(getResources().getColor(R.color.drawer_text_color));
             v.setBackgroundResource(R.drawable.drawer_item_selected_background);
@@ -386,8 +406,8 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @OnClick({R.id.filter_dk, R.id.filter_druid, R.id.filter_hunter, R.id.filter_mage, R.id.filter_monk,
-        R.id.filter_paladin, R.id.filter_priest, R.id.filter_rogue, R.id.filter_shaman, R.id.filter_warlock,
-        R.id.filter_warrior})
+            R.id.filter_paladin, R.id.filter_priest, R.id.filter_rogue, R.id.filter_shaman, R.id.filter_warlock,
+            R.id.filter_warrior})
     public void onClickClassFilter(View v) {
         switch (v.getId()) {
             case R.id.filter_warrior:
@@ -427,7 +447,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     }
 
     @OnClick({R.id.filter_blood_elf, R.id.filter_draenei, R.id.filter_dwarf, R.id.filter_gnome, R.id.filter_goblin,
-        R.id.filter_human, R.id.filter_orc, R.id.filter_pandaren, R.id.filter_tauren, R.id.filter_troll,
+            R.id.filter_human, R.id.filter_orc, R.id.filter_pandaren, R.id.filter_tauren, R.id.filter_troll,
             R.id.filter_worgen, R.id.filter_night_elf, R.id.filter_undead})
     public void onClickRaceFilter(View v) {
         switch (v.getId()) {
@@ -477,7 +497,7 @@ public class MainActivity extends BaseActivity implements SearchView.OnQueryText
     public void onClickSelectAll(View v) {
         mAdapter.clearFilter();
 
-        for(CheckBox cb : filterList) {
+        for (CheckBox cb : filterList) {
             cb.setChecked(true);
         }
         closeNavDrawer();
